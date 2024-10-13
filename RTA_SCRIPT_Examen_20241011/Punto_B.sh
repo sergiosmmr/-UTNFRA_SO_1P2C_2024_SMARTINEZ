@@ -71,13 +71,4 @@ sudo mkfs.ext4 ${DISCO}13
 sudo mkfs.ext4 ${DISCO}1
 
 #montaje
-sudo mount ${DISCO}5 /Examenes-UTN/alumno_1/parcial_1 ext4 defaults 0 0" | sudo tee -a /etc/fstab
-sudo mount ${DISCO}6 /Examenes-UTN/alumno_1/parcial_2 ext4 defaults 0 0" | sudo tee -a /etc/fstab
-sudo mount ${DISCO}7 /Examenes-UTN/alumno_1/parcial_3 ext4 defaults 0 0" | sudo tee -a /etc/fstab
-sudo mount ${DISCO}8 /Examenes-UTN/alumno_2/parcial_1 ext4 defaults 0 0" | sudo tee -a /etc/fstab
-sudo mount ${DISCO}9 /Examenes-UTN/alumno_2/parcial_2 ext4 defaults 0 0" | sudo tee -a /etc/fstab
-sudo mount ${DISCO}11 /Examenes-UTN/alumno_2/parcial_3 ext4 defaults 0 0" | sudo tee -a /etc/fstab
-sudo mount ${DISCO}12 /Examenes-UTN/alumno_3/parcial_1 ext4 defaults 0 0" | sudo tee -a /etc/fstab
-sudo mount ${DISCO}13 /Examenes-UTN/alumno_3/parcial_2 ext4 defaults 0 0" | sudo tee -a /etc/fstab
-sudo mount ${DISCO}14 /Examenes-UTN/alumno_3/parcial_3 ext4 defaults 0 0" | sudo tee -a /etc/fstab
-rudo mount ${DISCO}15 /Examenes-UTN/profesores ext4 defaults 0 0" | sudo tee -a /etc/fstab
+
