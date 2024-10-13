@@ -2,16 +2,5 @@
 Alumno:maximiliano martinez rivero
 Division:313
 Turno:T.N
-Alumno:maximiliano martinez rivero
-Division:313
-Turno:T.N
-Alumno:maximiliano martinez rivero
-Division:313
-Turno:T.N
-
-
-Alumno:maximiliano martinez rivero
-Division:313
-Turno:T.N
 legajo:117842
 
