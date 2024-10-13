@@ -71,4 +71,24 @@ sudo mkfs.ext4 ${DISCO}13
 sudo mkfs.ext4 ${DISCO}1
 
 #montaje
+echo "Montando_Particiones......"
 
+INDICE_DISCO=5
+for carpeta in alumno_1/parcial_1 alumno_1/parcial_2 alumno_1/parcial_3 alumno_2/parcial_1 alumno_2/parcial_2 alumno_2/parcial_3 alumno_3/parcial_1 alumno_3/parcial_2 alumno_3/parcial_3 profesores
+do
+	DISPOSITIVO=${DISCO}${INDICE_DISCO}
+	DIR="/Examenes-UTN/${carpeta}"
+
+	echo "Montando disco ${DISCO_A_MONTAR} en ${DIRECTORIO}"
+	echo
+	
+	echo "${DISPOSITIVO}   ${DIR}   ext4     defaults      0        0" | sudo tee -a /etc/fstab 
+	
+	# Aumento contador de disco
+
+	INDICE_DISCO=$((INDICE_DISCO+1))
+done
+
+# Montar todo lo de fstab
+sudo systemctl daemon-reload
+sudo mount -a
