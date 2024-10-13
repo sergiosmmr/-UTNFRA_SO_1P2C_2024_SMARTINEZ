@@ -1,73 +1,44 @@
 #!/bin/bash
 
-echo
-echo "Para ejecutar: ./Punto_B.sh  Listado_Punto_B.txt"
-echo
+# Crear grupos
+sudo groupadd p1c2_2024_gAlumno
+sudo groupadd p1c2_2024_gProfesores
 
-LISTA=$1
+# Crear usuarios con sus grupos secundarios
+sudo useradd -m -s /bin/bash -G p1c2_2024_gAlumno p1c2_2024_A1
+sudo useradd -m -s /bin/bash -G p1c2_2024_gAlumno p1c2_2024_A2
+sudo useradd -m -s /bin/bash -G p1c2_2024_gAlumno p1c2_2024_A3
+sudo useradd -m -s /bin/bash -G p1c2_2024_gProfesores p1c2_2024_P1
 
-if [[ $LISTA = '' ]] 
-then
-	echo "ERROR: Por favor, ingrese el listado de usuarios y grupos."
-	exit
-fi
+# Crear directorios
+sudo mkdir -p /Examenes-UTN/alumno_1
+sudo mkdir -p /Examenes-UTN/alumno_2
+sudo mkdir -p /Examenes-UTN/alumno_3
+sudo mkdir -p /Examenes-UTN/profesores
 
-MI_USUARIO=$(whoami)
-MI_HASH=$(sudo cat /etc/shadow | grep $MI_USUARIO | awk -F ':' '{print $2}')
+# Asignar permisos y propietarios
 
-ANT_IFS=$IFS
-IFS=$'\n'
+# Usuario p1c2_2024_A1
+sudo chown -R p1c2_2024_A1:p1c2_2024_gAlumno /Examenes-UTN/alumno_1
+sudo chmod -R 750 /Examenes-UTN/alumno_1
 
-for LINEA in `cat $LISTA |  grep -v ^#`
-do
-	# Guardo variables
-	GRUPO=$(echo $LINEA | awk -F ',' '{print $2}')
-	USUARIO=$(echo  $LINEA | awk -F ',' '{print $1}')
-	DIRECTORIO=$(echo $LINEA | awk -F ',' '{print $3}')
+# Usuario p1c2_2024_A2
+sudo chown -R p1c2_2024_A2:p1c2_2024_gAlumno /Examenes-UTN/alumno_2
+sudo chmod -R 760 /Examenes-UTN/alumno_2
 
-	# Creo grupo
-	echo "Creando grupo: $GRUPO"
-	sudo groupadd $GRUPO
+# Usuario p1c2_2024_A3
+sudo chown -R p1c2_2024_A3:p1c2_2024_gAlumno /Examenes-UTN/alumno_3
+sudo chmod -R 700 /Examenes-UTN/alumno_3
 
-	# Creo usuario
-	echo "Creando usuario: $USUARIO"
-	sudo useradd -m -s /bin/bash -G $GRUPO -p $MI_HASH $USUARIO
-	
-	# Asignar owner y permisos segun corresponda
-	echo "Asignando persmisos y propiedad"
-	if [[ $USUARIO = 'p1c2_2024_A1' ]]
-	then
-		# Permisos p1c2_2024_A1
-		sudo chmod 750 -R $DIRECTORIO
-		sudo chown -R $USUARIO:$USUARIO $DIRECTORIO
-		
-		# Validar permisos y escribir archivo
-		sudo su -c "whoami > /Examenes-UTN/alumno_1/validar.txt" $USUARIO
-	elif [[ $USUARIO = 'p1c2_2024_A2' ]]
-	then
-		# Permisos p1c2_2024_A2
-		sudo chmod 760 -R $DIRECTORIO
-		sudo chown -R $USUARIO:$USUARIO $DIRECTORIO
+# Usuario p1c2_2024_P1
+sudo chown -R p1c2_2024_P1:p1c2_2024_gProfesores /Examenes-UTN/profesores
+sudo chmod -R 775 /Examenes-UTN/profesores
 
-		# Validar permisos y escribir archivo
-		sudo su -c "whoami > /Examenes-UTN/alumno_2/validar.txt" $USUARIO
-	elif [[ $USUARIO = 'p1c2_2024_A3' ]]
-	then
-		# Permisos p1c2_2024_A3
-		sudo chmod 700 -R $DIRECTORIO
-		sudo chown -R $USUARIO:$USUARIO $DIRECTORIO
+# Crear archivos de validación
+sudo su -c "whoami > /Examenes-UTN/alumno_1/validar.txt" p1c2_2024_A1
+sudo su -c "whoami > /Examenes-UTN/alumno_2/validar.txt" p1c2_2024_A2
+sudo su -c "whoami > /Examenes-UTN/alumno_3/validar.txt" p1c2_2024_A3
+sudo su -c "whoami > /Examenes-UTN/profesores/validar.txt" p1c2_2024_P1
 
-		# Validar permisos y escribir archivo
-		sudo su -c "whoami > /Examenes-UTN/alumno_3/validar.txt" $USUARIO
-	elif [[ $USUARIO = 'p1c2_2024_P1' ]]
-	then
-		# Permisos p1c2_2024_P1
-		sudo chmod 775 -R $DIRECTORIO
-		sudo chown -R $USUARIO:$GRUPO $DIRECTORIO
-		
-		# Validar permisos y escribir archivo
-		sudo su -c "whoami > /Examenes-UTN/profesores/validar.txt" $USUARIO
-	fi
-done
+echo "Usuarios creados, permisos ajustados y archivos de validación generados."
 
-IFS=$ANT_IFS
