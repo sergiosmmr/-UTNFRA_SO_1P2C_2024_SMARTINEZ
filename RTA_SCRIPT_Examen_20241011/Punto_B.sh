@@ -1,94 +1,83 @@
 #!/bin/bash
 
-# Creo las particones
+DISCO=$(sudo fdisk -l | grep '10 GiB' | awk '{print $2}' | awk -F ':' '{print $1}')
 
-DISCO=$(sudo fdisk -l | grep "10 GiB" | awk '{print $2}' | awk -F ':' '{print $1}')
-
-echo "Disco: $DISCO"
+echo "Particionando disco: $DISCO"
+echo
 
 sudo fdisk $DISCO << EOF
 n
 e
+1
 
-
-+10GB
 
 n
-l
 
-+1GB
++1000M
 n
-l
 
-+1GB
++1000M
 n
-l
 
-+1GB
++1000M
 n
-l
 
-+1GB
++1000M
 n
-l
 
-+1GB
++1000M
 n
-l
 
-+1GB
++1000M
 n
-l
 
-+1GB
++1000M
 n
-l
 
-+1GB
++1000M
 n
-l
 
-+1GB
++1000M
+n
+
++1000M
+
 w
 EOF
 
 echo
-echo "asi quedaron las particiones"
-echo
+echo "Particiones Creadas!"
 
 sudo fdisk -l $DISCO
 
-#formateo
-sudo mkfs.ext4 ${DISCO}5
-sudo mkfs.ext4 ${DISCO}6
-sudo mkfs.ext4 ${DISCO}7
-sudo mkfs.ext4 ${DISCO}8
-sudo mkfs.ext4 ${DISCO}9
-sudo mkfs.ext4 ${DISCO}10
-sudo mkfs.ext4 ${DISCO}11
-sudo mkfs.ext4 ${DISCO}12
-sudo mkfs.ext4 ${DISCO}13
-sudo mkfs.ext4 ${DISCO}1
+# Formateo de Particiones
+echo "Formateando Particiones..."
+for i in {5..14} 
+do
+	DISCO_ACTUAL=${DISCO}${i}
+	echo "Formateando Particion: ${DISCO_ACTUAL}"
+	sudo mkfs.ext4 -F ${DISCO_ACTUAL}
+done
 
 #montaje
 echo "Montando_Particiones......"
 
-INDICE_DISCO=5
-for carpeta in alumno_1/parcial_1 alumno_1/parcial_2 alumno_1/parcial_3 alumno_2/parcial_1 alumno_2/parcial_2 alumno_2/parcial_3 alumno_3/parcial_1 alumno_3/parcial_2 alumno_3/parcial_3 profesores
-do
-	DISPOSITIVO=${DISCO}${INDICE_DISCO}
-	DIR="/Examenes-UTN/${carpeta}"
+# agrego en /etc/fstab las rutas
 
-	echo "Montando disco ${DISCO_A_MONTAR} en ${DIRECTORIO}"
-	echo
-	
-	echo "${DISPOSITIVO}   ${DIR}   ext4     defaults      0        0" | sudo tee -a /etc/fstab 
-	
-	# Aumento contador de disco
+echo "${DISCO}1 /Examenes-UTN/profesores ext4 default 0 0" | sudo tee -a /etc/fstab
 
-	INDICE_DISCO=$((INDICE_DISCO+1))
-done
+echo "${DISCO}5 /Examenes-UTN/alumno_1/parcial_1 ext4 default 0 0" | sudo tee -a /etc/fstab
+echo "${DISCO}6 /Examenes-UTN/alumno_1/parcial_2 ext4 default 0 0" | sudo tee -a /etc/fstab
+echo "${DISCO}7 /Examenes-UTN/alumno_1/parcial_3 ext4 default 0 0" | sudo tee -a /etc/fstab
+echo "${DISCO}8 /Examenes-UTN/alumno_2/parcial_1 ext4 default 0 0" | sudo tee -a /etc/fstab
+echo "${DISCO}9 /Examenes-UTN/alumno_2/parcial_2 ext4 default 0 0" | sudo tee -a /etc/fstab
+echo "${DISCO}10 /Examenes-UTN/alumno_2/parcial_3 ext4 default 0 0" | sudo tee -a /etc/fstab
+echo "${DISCO}11 /Examenes-UTN/alumno_3/parcial_1 ext4 default 0 0" | sudo tee -a /etc/fstab
+echo "${DISCO}12 /Examenes-UTN/alumno_3/parcial_2 ext4 default 0 0" | sudo tee -a /etc/fstab
+echo "${DISCO}13 /Examenes-UTN/alumno_3/parcial_3 ext4 default 0 0" | sudo tee -a /etc/fstab
+
 
 # Montar todo lo de fstab
+
 sudo systemctl daemon-reload
 sudo mount -a
